@@ -87,7 +87,7 @@ _This bot was made possible with the help and support of the following individua
 -   **[ABHINAV](https://t.me/adityaabhinav)**
 -   **[MASTER](https://t.me/V_Sbotmaker)**
 
-- **[REx BOTs](https://t.me/cantarellabots)**
+- **[CantarellaBots](https://t.me/cantarellabots)**
 
 - **Base Repo**:- **[CodeFlix](https://github.com/Codeflix-Bots/Links-Share-Bot.git)**
 ---
