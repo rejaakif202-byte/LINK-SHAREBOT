@@ -1,6 +1,7 @@
 import asyncio
 import base64
 import time
+import uuid
 import logging
 from collections import defaultdict
 from asyncio import Lock
@@ -413,18 +414,48 @@ async def start_command(client: Bot, message: Message):
             f"<blockquote>If this persists, contact support.</blockquote>",
             parse_mode=ParseMode.HTML
         )
-@Bot.on_message(filters.command("addch") & filters.private)
+@Bot.on_message(filters.command("addch") & filters.private & admin)
 async def add_channel_handler(client, message):
 
     if len(message.command) < 2:
         return await message.reply_text(
-            "❌ Please provide a channel ID.\n\nExample:\n/addch -1001234567890"
+            "❌ Provide channel ID.\n\nExample:\n/addch -1001234567890"
         )
 
-    channel_id = message.command[1]
+    try:
+        chat_id = int(message.command[1])
 
-    # Here you can add database save logic later
-    await message.reply_text(f"✅ Channel {channel_id} added successfully!"
+        member = await client.get_chat_member(chat_id, "me")
+        if member.status not in ["administrator", "creator"]:
+            return await message.reply_text("❌ Bot must be admin in channel.")
+
+        await db.add_channel(chat_id)
+
+        # Create 10 min expiry invite
+        expire_time = int(time.time()) + 600
+
+        invite = await client.create_chat_invite_link(
+            chat_id,
+            expire_date=expire_time
+        )
+
+        # Generate unique key
+        unique_code = str(uuid.uuid4())[:8]
+
+        # Save link in DB with code + expiry
+        await db.save_temp_link(unique_code, invite.invite_link, expire_time)
+
+        bot_username = (await client.get_me()).username
+
+        deep_link = f"https://t.me/{bot_username}?start={unique_code}"
+
+        await message.reply_text(
+            f"✅ Channel Added!\n\n"
+            f"🔗 Join Link (Valid 10 minutes):\n{deep_link}"
+        )
+
+    except Exception as e:
+        await message.reply_text(f"❌ Error:\n{str(e)}"
         )
 @Bot.on_message(filters.command("delch") & filters.private)
 async def delete_channel_handler(client, message):
