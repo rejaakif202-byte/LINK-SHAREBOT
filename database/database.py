@@ -201,6 +201,23 @@ class Master:
             logging.error(f"Error saving channel {channel_id}: {e}")
             return False
 
+    # ==============================
+    # Temporary Invite Link System
+    # ==============================
+
+    async def save_temp_link(self, code: str, link: str, expire_time: int):
+        await self.db.temp_links.insert_one({
+            "code": code,
+            "link": link,
+            "expire_time": expire_time
+        })
+
+    async def get_temp_link(self, code: str):
+        return await self.db.temp_links.find_one({"code": code})
+
+    async def delete_temp_link(self, code: str):
+        await self.db.temp_links.delete_one({"code": code})
+        
     async def get_channels(self) -> List[int]:
         """Get all active channel IDs from the database."""
         try:
