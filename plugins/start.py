@@ -535,41 +535,94 @@ async def links_handler(client, message):
         await message.reply_text(
             f"❌ Failed to fetch links.\n\nReason:\n{str(e)}"
         )
-@Bot.on_message(filters.command("addadmin") & filters.private)
-async def delete_admin_handler(client, message):
-    await message.reply_text("User added to admin list."
-        )
-@Bot.on_message(filters.command("deladmin") & filters.private)
+@Bot.on_message(filters.command("addadmin") & filters.private & admin)
 async def add_admin_handler(client, message):
-    await message.reply_text("Admin removed succesfully."
+
+    if len(message.command) < 2:
+        return await message.reply_text(
+            "❌ Please provide user ID.\n\nExample:\n/addadmin 123456789"
         )
-@Bot.on_message(filters.command("addfsub") & filters.private)
+
+    user_id = int(message.command[1])
+
+    ok = await db.add_admin(user_id)
+    if ok:
+        await message.reply_text(f"✅ Added {user_id} as admin.")
+    else:
+        await message.reply_text("❌ Failed to add admin."
+        )
+@Bot.on_message(filters.command("deladmin") & filters.private & admin)
+async def del_admin_handler(client, message):
+
+    if len(message.command) < 2:
+        return await message.reply_text(
+            "❌ Please provide user ID.\n\nExample:\n/deladmin 123456789"
+        )
+
+    user_id = int(message.command[1])
+
+    ok = await db.remove_admin(user_id)
+    if ok:
+        await message.reply_text(f"✅ Removed {user_id} from admins.")
+    else:
+        await message.reply_text("❌ No such admin found."
+        )
+@Bot.on_message(filters.command("addfsub") & filters.private & admin)
 async def add_fsub_handler(client, message):
-    await message.reply_text("Force subscribe channel added."
+
+    if len(message.command) < 2:
+        return await message.reply_text(
+            "❌ Provide channel ID.\n\nExample:\n/addfsub -1001234567890"
         )
-@Bot.on_message(filters.command("delfsub") & filters.private)
+
+    try:
+        chat_id = int(message.command[1])
+
+        # Check bot is admin in channel
+        member = await client.get_chat_member(chat_id, "me")
+        if member.status not in ["administrator", "creator"]:
+            return await message.reply_text("❌ Bot must be admin in that channel.")
+
+        await db.add_fsub(chat_id)
+
+        await message.reply_text(f"✅ Force-sub channel {chat_id} added.")
+
+    except Exception as e:
+        await message.reply_text(f"❌ Error:\n{str(e)}"
+        )
+@Bot.on_message(filters.command("delfsub") & filters.private & admin)
 async def del_fsub_handler(client, message):
-    await message.reply_text("Force subscribe channel removed."
-        )
-@Bot.on_message(filters.command("req") & filters.private)
-async def req_mode_handler(client, message):
-    await message.reply_text("Request force-sub mode toggled."
-        )
-@Bot.on_message(filters.command("reqtime") & filters.private)
-async def req_time_handler(client, message):
-    await message.reply_text("Auto approve time updated."
-        )
-@Bot.on_message(filters.command("reqmode") & filters.private)
-async def req_mode_onoff_handler(client, message):
-    await message.reply_text("Auto request mode updated."
-        )
-@Bot.on_message(filters.command("approveoff") & filters.private)
-async def approve_off_handler(client, message):
-    await message.reply_text("Approve mode turned OFF."
-        )
-@Bot.on_message(filters.command("approveon") & filters.private)
-async def approve_on_handler(client, message):
-    await message.reply_text("Approve mode turned ON."
+
+    fsubs = await db.get_fsubs()
+
+    # If no channels exist
+    if not fsubs:
+        return await message.reply_text("❌ No force-sub channels added.")
+
+    # If user only typed /delfsub → show list
+    if len(message.command) < 2:
+        text = "📢 Force-Sub Channels:\n\n"
+
+        for ch in fsubs:
+            text += f"• `{ch}`\n"
+
+        text += "\nTo remove a channel:\n/delfsub -1001234567890"
+
+        return await message.reply_text(text)
+
+    # If user provided ID → remove it
+    try:
+        chat_id = int(message.command[1])
+
+        if chat_id not in fsubs:
+            return await message.reply_text("❌ That channel is not in force-sub list.")
+
+        await db.remove_fsub(chat_id)
+
+        await message.reply_text(f"✅ Force-sub channel {chat_id} removed.")
+
+    except:
+        await message.reply_text("❌ Invalid channel ID."
         )
 @Bot.on_message(filters.command("broadcast") & filters.private & admin)
 async def broadcast_handler(bot: Client, m: Message):
