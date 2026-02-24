@@ -216,6 +216,20 @@ async def start_command(client: Bot, message: Message):
     
     try:
         # Handle deep links (encoded links)
+        if len(message.command) > 1:
+        code = message.command[1]
+        data = await db.get_temp_link(code)
+
+        if not data:
+            return await message.reply_text("❌ Invalid or expired link.")
+
+        if time.time() > data["expire_time"]:
+            await db.delete_temp_link(code)
+            return await message.reply_text("❌ This link has expired.")
+
+        return await message.reply_text(
+            f"🔗 Here is your join link:\n\n{data['link']}"
+        )
         text = message.text
         if len(text) > 7:
             try:
