@@ -36,7 +36,7 @@ class Bot(Client):
         try:
             await self.send_photo(
                     chat_id=DATABASE_CHANNEL,
-                    photo="https://ibb.co/DH3N4Lyr",
+                    photo="https://graph.org/file/04176cce417d309449f6a-5f60f0333d323168cd.jpg",
                     caption=(
                         "**I ʀᴇsᴛᴀʀᴛᴇᴅ ᴀɢᴀɪɴ !**"),
                     reply_markup=InlineKeyboardMarkup(
