@@ -415,27 +415,125 @@ async def start_command(client: Bot, message: Message):
         )
 @Bot.on_message(filters.command("addch") & filters.private)
 async def add_channel_handler(client, message):
-    await message.reply_text("Channel added successfully!"
+
+    if len(message.command) < 2:
+        return await message.reply_text(
+            "❌ Please provide a channel ID.\n\nExample:\n/addch -1001234567890"
+        )
+
+    channel_id = message.command[1]
+
+    # Here you can add database save logic later
+    await message.reply_text(f"✅ Channel {channel_id} added successfully!"
         )
 @Bot.on_message(filters.command("delch") & filters.private)
 async def delete_channel_handler(client, message):
-    await message.reply_text("Channel removed successfully!"
+
+    if len(message.command) < 2:
+        return await message.reply_text(
+            "❌ Please provide a channel ID.\n\nExample:\n/delch -1001234567890"
         )
-@Bot.on_message(filters.command("genlink") & filters.private)
+
+    channel_id = message.command[1]
+
+    # Here you can add database delete logic later
+    await message.reply_text(f"✅ Channel {channel_id} removed successfully!"
+        )
+@Bot.on_message(filters.command("genlink") & filters.private & admin)
 async def genlink_handler(client, message):
-    await message.reply_text("Link generated successfully!"
+
+    if len(message.command) < 2:
+        return await message.reply_text(
+            "❌ Please provide channel/group ID.\n\nExample:\n/genlink -1001234567890"
         )
-@Bot.on_message(filters.command("channels") & filters.private)
+
+    try:
+        chat_id = int(message.command[1])
+
+        invite = await client.create_chat_invite_link(chat_id)
+
+        await message.reply_text(
+            f"✅ Invite Link Generated:\n\n{invite.invite_link}"
+        )
+
+    except Exception as e:
+        await message.reply_text(
+            f"❌ Failed to generate link.\n\nReason:\n{str(e)}"
+        )
+@Bot.on_message(filters.command("channels") & filters.private & admin)
 async def channels_handler(client, message):
-    await message.reply_text("Here are your added channels."
+
+    channels = await db.get_all_channels()  # change name if different in your project
+
+    if not channels:
+        return await message.reply_text("❌ No channels connected to the bot.")
+
+    text = "📢 Connected Channels:\n\n"
+
+    for ch in channels:
+        text += f"• `{ch['channel_id']}`\n"
+
+    await message.reply_text(text
         )
-@Bot.on_message(filters.command("bulklink") & filters.private)
+@Bot.on_message(filters.command("bulklink") & filters.private & admin)
 async def bulklink_handler(client, message):
-    await message.reply_text("Bulk links generated successfully!"
+
+    if len(message.command) < 3:
+        return await message.reply_text(
+            "❌ Please provide channel ID and amount.\n\n"
+            "Example:\n/bulklink -1001234567890 5"
         )
-@Bot.on_message(filters.command("links") & filters.private)
+
+    try:
+        chat_id = int(message.command[1])
+        amount = int(message.command[2])
+
+        if amount > 20:
+            return await message.reply_text("❌ Maximum 20 links allowed at once.")
+
+        links_text = "🔗 Generated Invite Links:\n\n"
+
+        for i in range(amount):
+            invite = await client.create_chat_invite_link(chat_id)
+            links_text += f"{i+1}. {invite.invite_link}\n"
+
+        await message.reply_text(links_text)
+
+    except ValueError:
+        await message.reply_text("❌ Channel ID and amount must be numbers.")
+
+    except Exception as e:
+        await message.reply_text(
+            f"❌ Failed to generate links.\n\nReason:\n{str(e)}"
+        )
+@Bot.on_message(filters.command("links") & filters.private & admin)
 async def links_handler(client, message):
-    await message.reply_text("All channel links are shown here."
+
+    if len(message.command) < 2:
+        return await message.reply_text(
+            "❌ Please provide channel/group ID.\n\nExample:\n/links -1001234567890"
+        )
+
+    try:
+        chat_id = int(message.command[1])
+
+        links = client.get_chat_invite_links(chat_id)
+
+        text = "🔗 Active Invite Links:\n\n"
+        count = 0
+
+        async for link in links:
+            count += 1
+            text += f"{count}. {link.invite_link}\n"
+
+        if count == 0:
+            return await message.reply_text("❌ No active invite links found.")
+
+        await message.reply_text(text)
+
+    except Exception as e:
+        await message.reply_text(
+            f"❌ Failed to fetch links.\n\nReason:\n{str(e)}"
         )
 @Bot.on_message(filters.command("addadmin") & filters.private)
 async def delete_admin_handler(client, message):
