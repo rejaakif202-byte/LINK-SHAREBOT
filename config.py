@@ -21,7 +21,7 @@ HELP_TXT = "⁉️ ʜᴇʟʟᴏ ᴛʜᴇʀᴇ! {mention} ~\n\n <b><blockquote ex
 FSUB_PIC = "https://graph.org/file/04176cce417d309449f6a-5f60f0333d323168cd.jpg"
 FSUB_LINK_EXPIRY = 300
 LOG_FILE_NAME = "SukunaLogChannel.txt"
-DATABASE_CHANNEL = "-1003841310374"
+DATABASE_CHANNEL = None
 
 logging.basicConfig(
     level=logging.INFO,
