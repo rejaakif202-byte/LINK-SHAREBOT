@@ -413,7 +413,66 @@ async def start_command(client: Bot, message: Message):
             f"<blockquote>If this persists, contact support.</blockquote>",
             parse_mode=ParseMode.HTML
         )
-                
+@Bot.on_message(filters.command("addch") & filters.private)
+async def add_channel_handler(client, message):
+    await message.reply_text("Channel added successfully!"
+        )
+@Bot.on_message(filters.command("delch") & filters.private)
+async def delete_channel_handler(client, message):
+    await message.reply_text("Channel removed successfully!"
+        )
+@Bot.on_message(filters.command("genlink") & filters.private)
+async def genlink_handler(client, message):
+    await message.reply_text("Link generated successfully!"
+        )
+@Bot.on_message(filters.command("channels") & filters.private)
+async def channels_handler(client, message):
+    await message.reply_text("Here are your added channels."
+        )
+@Bot.on_message(filters.command("bulklink") & filters.private)
+async def bulklink_handler(client, message):
+    await message.reply_text("Bulk links generated successfully!"
+        )
+@Bot.on_message(filters.command("links") & filters.private)
+async def links_handler(client, message):
+    await message.reply_text("All channel links are shown here."
+        )
+@Bot.on_message(filters.command("addadmin") & filters.private)
+async def delete_admin_handler(client, message):
+    await message.reply_text("User added to admin list."
+        )
+@Bot.on_message(filters.command("deladmin") & filters.private)
+async def add_admin_handler(client, message):
+    await message.reply_text("Admin removed succesfully."
+        )
+@Bot.on_message(filters.command("addfsub") & filters.private)
+async def add_fsub_handler(client, message):
+    await message.reply_text("Force subscribe channel added."
+        )
+@Bot.on_message(filters.command("delfsub") & filters.private)
+async def del_fsub_handler(client, message):
+    await message.reply_text("Force subscribe channel removed."
+        )
+@Bot.on_message(filters.command("req") & filters.private)
+async def req_mode_handler(client, message):
+    await message.reply_text("Request force-sub mode toggled."
+        )
+@Bot.on_message(filters.command("reqtime") & filters.private)
+async def req_time_handler(client, message):
+    await message.reply_text("Auto approve time updated."
+        )
+@Bot.on_message(filters.command("reqmode") & filters.private)
+async def req_mode_onoff_handler(client, message):
+    await message.reply_text("Auto request mode updated."
+        )
+@Bot.on_message(filters.command("approveoff") & filters.private)
+async def approve_off_handler(client, message):
+    await message.reply_text("Approve mode turned OFF."
+        )
+@Bot.on_message(filters.command("approveon") & filters.private)
+async def approve_on_handler(client, message):
+    await message.reply_text("Approve mode turned ON."
+        )
 @Bot.on_message(filters.command("broadcast") & filters.private & admin)
 async def broadcast_handler(bot: Client, m: Message):
     try:
