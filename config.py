@@ -13,7 +13,7 @@ PORT = os.environ.get("PORT", "8080")
 DB_URL = "mongodb+srv://milesmorales:milesmorales@cluster0.3vsabsv.mongodb.net/?appName=Cluster0"
 DB_NAME = "Cluster0"
 TG_BOT_WORKERS = int(os.environ.get("TG_BOT_WORKERS", "40"))
-COMMAND_PHOTO = "https://graph.org/file/04176cce417d309449f6a-5f60f0333d323168cd.jpg")  # Replace with your photo URL
+COMMAND_PHOTO = "https://graph.org/file/04176cce417d309449f6a-5f60f0333d323168cd.jpg" # Replace with your photo URL
 START_PIC = "https://graph.org/file/04176cce417d309449f6a-5f60f0333d323168cd.jpg"
 START_MSG = "ʜᴇʟʟᴏ ᴛʜᴇʀᴇ! {mention} ~\n\n <i><b><blockquote>I ᴀᴍ ᴀ ᴀᴅᴠᴀɴᴄᴇ ʟɪɴᴋ sʜᴀʀᴇ ʙᴏᴛ ᴛʜʀᴏᴜɢʜ ᴡʜɪᴄʜ ʏᴏᴜ ᴄᴀɴ ɢᴇᴛ ᴛʜᴇ ʟɪɴᴋs ᴏғ sᴘᴇᴄɪғɪᴄ ᴄʜᴀɴɴᴇʟs ᴡʜɪᴄʜ sᴀᴠᴇ ʏᴏᴜʀ ᴄʜᴀɴɴᴇʟs ғʀᴏᴍ ᴄᴏᴘʏʀɪɡʜᴛ.</blockquote></b></i>"
 ABOUT_TXT = "<i><b><blockquote>◈ ᴄʀᴇᴀᴛᴏʀ: <a href='tg://openmessage?user_id=7846306818'>sʜᴀᴍʀᴏᴄᴋ</a>\n◈ ꜰᴏᴜɴᴅᴇʀ ᴏꜰ : <a href='https://t.me/animexverse'>ᴀɴɪᴍᴇ ᴠᴇʀsᴇ</a>\n◈ ᴅᴇᴠᴇʟᴏᴘᴇʀ: <a href='tg://openmessage?user_id=7846306818'>sʜᴀᴍʀᴏᴄᴋ</a>\n◈ ᴅᴀᴛᴀʙᴀsᴇ: <a href='https://www.mongodb.com/docs/'>ᴍᴏɴɢᴏ ᴅʙ</a>\n» ᴅᴇᴠᴇʟᴏᴘᴇʀ: <a href='tg://openmessage?user_id=7846306818'>sʜᴀᴍʀᴏᴄᴋ</a></blockquote></b></i>"
