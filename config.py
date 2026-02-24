@@ -10,7 +10,7 @@ APP_ID = "32562995"
 API_HASH = "d74b9929a577c9e26f72a36397af47d6"
 OWNER_ID = "7846306818"
 PORT = os.environ.get("PORT", "8080")
-DB_URL = "mongodb+srv://milesmorales:milesmorales@cluster0.3vsabsv.mongodb.net/?appName=Cluster0"
+DB_URL = "mongodb+srv://interpeterr:interpeterr@cluster0.bh4seqc.mongodb.net/?appName=Cluster0"
 DB_NAME = "Cluster0"
 TG_BOT_WORKERS = int(os.environ.get("TG_BOT_WORKERS", "40"))
 COMMAND_PHOTO = "https://graph.org/file/04176cce417d309449f6a-5f60f0333d323168cd.jpg" # Replace with your photo URL
